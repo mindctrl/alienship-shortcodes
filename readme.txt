@@ -1,0 +1,1 @@
+Alien Ship Shortcodes allows you to use shortcodes to display Bootstrap elements on sites using the Alien Ship theme. It also works on child themes, and may possibly work with other themes that have the appropriate Bootstrap CSS and JS.
