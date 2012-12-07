@@ -3,7 +3,7 @@
 Plugin Name: Alien Ship Shortcodes
 Plugin URI: http://www.johnparris.com/wordpress-plugins/alienship-shortcodes/
 Description: Shortcodes for displaying Bootstrap elements in the Alien Ship theme
-Version: 1.0
+Version: 1.0.2
 Author: John Parris
 Author URI: http://www.johnparris.com
 License: GPL2
@@ -12,7 +12,7 @@ License: GPL2
 /*  Copyright 2012 John Parris */
 
 /* Prevent direct access */
-if ( ! empty( $_SERVER['SCRIPT_FILENAME'] ) && 'alienship-shortcodes.php' == basename( $_SERVER['SCRIPT_FILENAME'] ) )
+if ( ! defined( 'ABSPATH' ) )
   die ( 'What\'chu talkin\' \'bout, Willis?' );
 
 
@@ -63,7 +63,7 @@ class AlienShip_Shortcodes {
     if ($type != "alert") {
       return '<div class="alert alert-'.$type.' fade in"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>'. do_shortcode( $heading ) .'</strong><p> ' . do_shortcode( $content ) . '</p></div>';
     } else {
-      return '<div class="'.$type.' fade in"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>'. do_shortcode( $heading ) .'</strong>' . do_shortcode( $content ) . '</div>';
+      return '<div class="'.$type.' fade in"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>'. do_shortcode( $heading ) .'</strong><p>' . do_shortcode( $content ) . '</p></div>';
     }
   }
 
@@ -320,7 +320,7 @@ class AlienShip_Shortcodes {
 
 } //class
 
-new AlienShip_Shortcodes();
+$alienship_shortcodes = new AlienShip_Shortcodes();
 endif;
 
 
