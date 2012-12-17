@@ -3,7 +3,7 @@
 Plugin Name: Alien Ship Shortcodes
 Plugin URI: http://www.johnparris.com/wordpress-plugins/alienship-shortcodes/
 Description: Shortcodes for displaying Bootstrap elements in the Alien Ship theme
-Version: 1.0.2
+Version: 1.0.3
 Author: John Parris
 Author URI: http://www.johnparris.com
 License: GPL2
@@ -130,6 +130,9 @@ class AlienShip_Shortcodes {
    * Example: [featured-posts tag="featured" max="3"] This will feature up to 3 posts tagged "featured".
    */
   function alienship_featured_posts_shortcode( $atts, $content = null ) {
+    /* Do nothing if we're doing an RSS feed */
+    if( is_feed() ) return;
+
     extract( shortcode_atts( array(
       'tag'    => '',
       'max'    => '',
