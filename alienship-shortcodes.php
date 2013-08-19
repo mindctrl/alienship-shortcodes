@@ -3,7 +3,7 @@
 Plugin Name: Alien Ship Shortcodes
 Plugin URI: http://www.johnparris.com/wordpress-plugins/alienship-shortcodes/
 Description: Shortcodes for displaying Bootstrap elements in the Alien Ship theme
-Version: 1.0.3
+Version: 1.0.4
 Author: John Parris
 Author URI: http://www.johnparris.com
 License: GPL2
@@ -79,11 +79,7 @@ class AlienShip_Shortcodes {
    */
   function alienship_badge( $atts, $content = null ) {
     extract( shortcode_atts( array( 'type' => 'badge' ), $atts) );
-    if ( $type != "badge" ) {
-      return '<span class="badge badge-'.$type.'">' . do_shortcode( $content ) . '</span>';
-    } else {
-      return '<span class="'.$type.'">' . do_shortcode( $content ) . '</span>';
-    }
+      return '<span class="badge">' . do_shortcode( $content ) . '</span>';
   }
 
 
@@ -105,7 +101,7 @@ class AlienShip_Shortcodes {
       ), $atts) );
 
     if ( empty( $type ) ) {
-      $type = "btn";
+      $type = "btn btn-default";
     } else {
       $type = "btn btn-" . $type;
     }
@@ -126,7 +122,7 @@ class AlienShip_Shortcodes {
    * Featured Posts Carousel
    *
    * @since 1.0
-   * [featured-posts] shortcode. Options are tag, max, width, and height. Defaults: tag="featured" max="3" width="745" height="350".
+   * [featured-posts] shortcode. Options are tag, max, width, and height. Defaults: tag="featured" max="3" width="850" height="350".
    * Example: [featured-posts tag="featured" max="3"] This will feature up to 3 posts tagged "featured".
    */
   function alienship_featured_posts_shortcode( $atts, $content = null ) {
@@ -153,7 +149,7 @@ class AlienShip_Shortcodes {
     }
 
     if ( empty( $width ) ) {
-      $width = "745";
+      $width = "850";
     } else {
       $width = ''.$width.'';
     }
@@ -171,8 +167,8 @@ class AlienShip_Shortcodes {
     if ( $featured_query_shortcode->have_posts() ) { ?>
       <!-- Featured listings -->
       <div style="width:<?php echo $width;?>px; max-width: 100%">
-      <div class="row-fluid">
-      <div class="span12">
+      <div class="row">
+      <div class="col-sm-12">
         <div id="featured-carousel-shortcode" class="carousel slide">
           <div class="carousel-inner">
 
@@ -181,17 +177,17 @@ class AlienShip_Shortcodes {
             <div class="item">
               <a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php echo get_the_post_thumbnail( ''. $featured_query_shortcode->post->ID .'', array($width, $height), array('title' => "" )); ?></a>
               <div class="carousel-caption">
-                <h4><?php the_title(); ?></h4>
+                <h3><?php the_title(); ?></h3>
               </div><!-- .carousel-caption -->
             </div><!-- .item -->
 
           <?php endwhile; ?>
           </div><!-- .carousel-inner -->
-          <a class="left carousel-control" href="#featured-carousel-shortcode" data-slide="prev">&lsaquo;</a>
-          <a class="right carousel-control" href="#featured-carousel-shortcode" data-slide="next">&rsaquo;</a>
+          <a class="left carousel-control" href="#featured-carousel-shortcode" data-slide="prev"><span class="icon-prev"></span></a>
+          <a class="right carousel-control" href="#featured-carousel-shortcode" data-slide="next"><span class="icon-next"></span></a>
         </div><!-- #featured-carousel-shortcode -->
-      </div><!-- .span12 -->
-      </div><!-- .row-fluid -->
+      </div><!-- .col-sm-12 -->
+      </div><!-- .row -->
       </div>
       <div class="clear">&nbsp;</div>
       <script type="text/javascript">
@@ -218,7 +214,7 @@ class AlienShip_Shortcodes {
    */
   function alienship_icon( $atts, $content = null ) {
     extract( shortcode_atts( array( 'type' => 'type' ), $atts ) );
-    return '<i class="icon icon-' . $type . '"></i>';
+    return '<i class="glyphicon glyphicon-' . $type . '"></i>';
   }
 
 
@@ -247,8 +243,8 @@ class AlienShip_Shortcodes {
    * Example: [label type="important"]Label text[/label]
    */
   function alienship_label( $atts, $content = null ) {
-    extract( shortcode_atts( array( 'type' => 'label' ), $atts ) );
-    if ($type != "label") {
+    extract( shortcode_atts( array( 'type' => 'label label-default' ), $atts ) );
+    if ($type != "label label-default") {
       return '<span class="label label-'.$type.'">' . do_shortcode( $content ) . '</span>';
     } else {
       return '<span class="'.$type.'">' . do_shortcode( $content ) . '</span>';
@@ -294,14 +290,14 @@ class AlienShip_Shortcodes {
   function alienship_panel( $atts, $content = null ) {
     extract( shortcode_atts( array( 'columns' => '6' ), $atts ) );
     $gridsize = '12';
-    $span = '"span';
+    $span = '"col-sm-';
     if ( $columns != "12" ) {
       $span .= ''.$columns.'"';
       $spanfollow = $gridsize - $columns;
-      return '<div class="row-fluid"><div class='.$span.'><div class="panel"><p>' . do_shortcode( $content ) . '</p></div></div><div class="span'.$spanfollow.'">&nbsp;</div></div><div class="clear"></div>'; }
+      return '<div class="row"><div class='.$span.'><div class="panel"><p>' . do_shortcode( $content ) . '</p></div></div><div class="span'.$spanfollow.'">&nbsp;</div></div><div class="clear"></div>'; }
     else {
       $span .= ''.$columns.'"';
-      return '<div class="row-fluid"><div class='.$span.'><div class="panel"><p>' . do_shortcode( $content ) . '</p></div></div></div><div class="clear"></div>';
+      return '<div class="row"><div class='.$span.'><div class="panel"><p>' . do_shortcode( $content ) . '</p></div></div></div><div class="clear"></div>';
     }
   }
 
