@@ -158,6 +158,7 @@ class AlienShip_Shortcodes {
 				'width'      => '850',
 				'height'     => '350',
 				'indicators' => 'true',
+				'captions'   => 'true',
 			), $atts )
 		);
 
@@ -191,9 +192,12 @@ class AlienShip_Shortcodes {
 										<a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
 											<?php echo get_the_post_thumbnail( ''. $featured_query_shortcode->post->ID .'', array( $width, $height ), array( 'title' => "" ) ); ?>
 										</a>
+
+										<?php if ( 'true' == $captions ) { ?>
 										<div class="carousel-caption">
 											<h3><?php the_title(); ?></h3>
 										</div>
+										<?php } ?>
 									</div><!-- .item -->
 								<?php endwhile; ?>
 
