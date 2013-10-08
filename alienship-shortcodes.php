@@ -332,7 +332,7 @@ class AlienShip_Shortcodes {
 
 		$output = '<div class="panel panel-' . $type . '">';
 
-		if ( $heading ) {
+		if ( 'true' == $heading ) {
 			$output .= '<div class="panel-heading">';
 
 			if ( $title )
