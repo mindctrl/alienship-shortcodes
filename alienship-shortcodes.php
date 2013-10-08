@@ -87,8 +87,8 @@ class AlienShip_Shortcodes {
 	 * Badges
 	 *
 	 * @since 1.0
-	 * [badge] shortcode. Options for type are default, success, warning, error, info, and inverse. If a type is not specified, default is used.
-	 * Example: [badge type="important"]1[/badge]
+	 * [badge] shortcode.
+	 * Example: [badge]1[/badge]
 	 */
 	function alienship_badge( $atts, $content = null ) {
 
@@ -103,38 +103,24 @@ class AlienShip_Shortcodes {
 	 * Buttons
 	 *
 	 * @since 1.0
-	 * [button] shortcode. Options for type= are "primary", "info", "success", "warning", "danger", and "inverse".
+	 * [button] shortcode. Options for type= are "default", "primary", "info", "success", "warning", and "danger".
 	 * Options for size are xs, sm, and lg. If none is specified it defaults to medium size.
-	 * Example: [button type="info" size="large" link="http://yourlink.com"]Button Text[/button]
+	 * Example: [button type="info" size="lg" link="http://yourlink.com"]Button Text[/button]
 	 */
 	function alienship_button( $atts, $content = null ) {
 
 		extract( shortcode_atts( array(
 				'link' => '#',
-				'type' => '',
-				'size' => 'medium'
+				'type' => 'default',
+				'size' => ''
 			), $atts )
 		);
 
-		// Button type
-		if ( empty( $type ) ) {
-			$type = "btn btn-default";
-
-		} else {
-			$type = "btn btn-" . $type;
-
-		}
-
 		// Button size
-		if ( $size == "medium" ) {
-			$size = "";
+		if ( $size )
+			$size = ' btn-' . $size;
 
-		} else {
-			$size = "btn-" . $size;
-
-		}
-
-		return '<a class="'.$type.' '.$size.'" href="'.$link.'">' . do_shortcode( $content ) . '</a>';
+		return '<a class="btn btn-' . $type . $size . '" href="' . $link . '">' . do_shortcode( $content ) . '</a>';
 	}
 
 
@@ -259,19 +245,16 @@ class AlienShip_Shortcodes {
 	 * Labels
 	 *
 	 * @since 1.0
-	 * [label] shortcode. Options for type= are "default", important", "info", "success", "warning", and "inverse". If a type of not specified, default is used.
-	 * Example: [label type="important"]Label text[/label]
+	 * [label] shortcode. Options for type= are "default", "primary, "success", "info", "warning", and "danger". If a type of not specified, default is used.
+	 * Example: [label type="danger"]Label text[/label]
 	 */
 	function alienship_label( $atts, $content = null ) {
 
 		extract( shortcode_atts( array(
-				'type' => ''
+				'type' => 'default'
 				),
 			$atts )
 		);
-
-		if ( empty ( $type ) )
-			$type = 'default';
 
 		return '<span class="label label-' . $type . '">' . do_shortcode( $content ) . '</span>';
 
