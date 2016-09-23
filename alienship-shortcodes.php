@@ -372,13 +372,3 @@ class AlienShip_Shortcodes {
 
 $alienship_shortcodes = new AlienShip_Shortcodes();
 endif;
-
-
-
-/* Load the update checker */
-/*require 'extensions/update-checker.php';
-$AlienShipShortcodesUpdateChecker = new PluginUpdateChecker(
-	'http://www.johnparris.com/deliver/wordpress/plugins/alienship-shortcodes/latest-version.json',
-	__FILE__,
-	'alienship-shortcodes'
-);*/
