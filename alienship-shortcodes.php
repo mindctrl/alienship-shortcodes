@@ -3,7 +3,7 @@
 Plugin Name: Alien Ship Shortcodes
 Plugin URI: http://www.johnparris.com/wordpress-plugins/alienship-shortcodes/
 Description: Shortcodes for displaying Bootstrap elements in the Alien Ship theme. It will work in other themes. It does not load the Bootstrap libraries. It assumes they're already provided by other means.
-Version: 1.0.7
+Version: 1.0.8
 Author: John Parris
 Author URI: https://www.johnparris.com
 License: GPL2
