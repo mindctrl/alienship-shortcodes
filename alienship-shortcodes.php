@@ -2,8 +2,8 @@
 /*
 Plugin Name: Alien Ship Shortcodes
 Plugin URI: http://www.johnparris.com/wordpress-plugins/alienship-shortcodes/
-Description: Shortcodes for displaying Bootstrap elements in the Alien Ship theme
-Version: 1.0.6
+Description: Shortcodes for displaying Bootstrap elements in the Alien Ship theme. It will work in other themes. It does not load the Bootstrap libraries. It assumes they're already provided by other means.
+Version: 1.0.7
 Author: John Parris
 Author URI: http://www.johnparris.com
 License: GPL2
@@ -11,9 +11,10 @@ License: GPL2
 
 /*  Copyright 2012 John Parris */
 
-/* Prevent direct access */
-if ( ! defined( 'ABSPATH' ) )
-	die ( 'What\'chu talkin\' \'bout, Willis?' );
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	die ( "What'chu talkin' 'bout, Willis?" );
+}
 
 
 if ( ! class_exists( 'AlienShip_Shortcodes' ) ):
@@ -44,6 +45,8 @@ class AlienShip_Shortcodes {
 		add_shortcode( 'loginform',      array( $this, 'alienship_login_form' ) );
 		add_shortcode( 'panel',          array( $this, 'alienship_panel' ) );
 		add_shortcode( 'well',           array( $this, 'alienship_well' ) );
+		add_shortcode( 'col',           array( $this, 'alienship_column' ) );
+		add_shortcode( 'row',           array( $this, 'alienship_row' ) );
 	}
 
 
@@ -51,26 +54,25 @@ class AlienShip_Shortcodes {
 	 * Alerts
 	 *
 	 * @since 1.0
-	 * Types are 'info', 'error', 'success'. If type is not specified, a default color is displayed. Specify a heading text. See example.
+	 * Types are 'success', 'info', 'warning', 'danger'. If type is not specified, a default color is displayed.
 	 * Example: [alert type="success" heading="Congrats!"]You won the lottery![/alert]
 	 */
 	function alienship_alert( $atts, $content = null ) {
 
-		extract( shortcode_atts( array(
-				'type'    => 'success',
-				'heading' => '',
-				'close'   => false,
-				),
-			$atts )
-		);
+		$atts = shortcode_atts( array(
+			'type'    => 'success',
+			'heading' => false,
+			'close'   => false,
+		),
+		$atts, 'alienship_alert' );
 
-		$output = '<div class="alert alert-' . $type . ' alert-dismissable">';
+		$output = '<div class="alert alert-' . $atts['type'] . ' alert-dismissable">';
 
-		if ( false !== $close )
+		if ( $atts['close'] )
 			$output .= '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
 
-		if ( $heading )
-			$output .= '<strong>' . do_shortcode( $heading ) . '</strong>';
+		if ( $atts['heading'] )
+			$output .= '<strong>' . do_shortcode( $atts['heading'] ) . '</strong>';
 
 		$output .= '<p>' . do_shortcode( $content ) . '</p>';
 
@@ -79,8 +81,6 @@ class AlienShip_Shortcodes {
 		return $output;
 
 	}
-
-
 
 
 	/**
@@ -92,11 +92,8 @@ class AlienShip_Shortcodes {
 	 */
 	function alienship_badge( $atts, $content = null ) {
 
-		extract( shortcode_atts( array( 'type' => 'badge' ), $atts ) );
 		return '<span class="badge">' . do_shortcode( $content ) . '</span>';
 	}
-
-
 
 
 	/**
@@ -109,21 +106,20 @@ class AlienShip_Shortcodes {
 	 */
 	function alienship_button( $atts, $content = null ) {
 
-		extract( shortcode_atts( array(
-				'link' => '#',
-				'type' => 'default',
-				'size' => ''
-			), $atts )
-		);
+		$atts = shortcode_atts( array(
+			'link' => '#',
+			'type' => 'default',
+			'size' => false,
+		),
+		$atts, 'alienship_button' );
 
 		// Button size
-		if ( $size )
-			$size = ' btn-' . $size;
+		$size = '';
+		if ( $atts['size'] )
+			$size = ' btn-' . $atts['size'];
 
-		return '<a class="btn btn-' . $type . $size . '" href="' . $link . '">' . do_shortcode( $content ) . '</a>';
+		return '<a class="btn btn-' . $atts['type'] . $size . '" href="' . $atts['link'] . '">' . do_shortcode( $content ) . '</a>';
 	}
-
-
 
 
 	/**
@@ -136,30 +132,32 @@ class AlienShip_Shortcodes {
 	function alienship_featured_posts_shortcode( $atts, $content = null ) {
 
 		/* Do nothing if we're doing an RSS feed */
-		if( is_feed() ) return;
+		if( is_feed() ) {
+			return;
+		}
 
-		extract( shortcode_atts( array(
-				'tag'        => 'featured',
-				'max'        => '3',
-				'width'      => '850',
-				'height'     => '350',
-				'indicators' => 'true',
-				'captions'   => 'true',
-			), $atts )
-		);
+		$atts = shortcode_atts( array(
+			'tag'        => 'featured',
+			'max'        => '3',
+			'width'      => '850',
+			'height'     => '350',
+			'indicators' => 'true',
+			'captions'   => 'true',
+		),
+		$atts, 'alienship_featured_posts_shortcode' );
 
-		$featuredquery = 'posts_per_page=' . absint( $max ) . '&tag=' . $tag;
+		$featuredquery = 'posts_per_page=' . absint( $atts['max'] ) . '&tag=' . $atts['tag'];
 		$featured_query_shortcode = new WP_Query( $featuredquery );
 
 		if ( $featured_query_shortcode->have_posts() ) { ?>
 			<!-- Featured listings -->
-			<div style="width:<?php echo $width;?>px; max-width: 100%">
+			<div style="width:<?php echo $atts['width'];?>px; max-width: 100%">
 				<div class="row">
 					<div class="col-sm-12">
 						<div id="featured-carousel-shortcode" class="carousel slide">
 
 							<?php // Featured post indicators?
-							if ( 'true' == $indicators ) { ?>
+							if ( 'true' == $atts['indicators'] ) { ?>
 							<ol class="carousel-indicators">
 								<?php
 								$indicators = $featured_query_shortcode->post_count;
@@ -176,10 +174,10 @@ class AlienShip_Shortcodes {
 								<?php while ( $featured_query_shortcode->have_posts() ) : $featured_query_shortcode->the_post(); ?>
 									<div class="item">
 										<a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
-											<?php echo get_the_post_thumbnail( ''. $featured_query_shortcode->post->ID .'', array( $width, $height ), array( 'title' => "" ) ); ?>
+											<?php echo get_the_post_thumbnail( ''. $featured_query_shortcode->post->ID .'', array( $atts['width'], $atts['height'] ), array( 'title' => "" ) ); ?>
 										</a>
 
-										<?php if ( 'true' == $captions ) { ?>
+										<?php if ( 'true' == $atts['captions'] ) { ?>
 										<div class="carousel-caption">
 											<h3><?php the_title(); ?></h3>
 										</div>
@@ -208,37 +206,22 @@ class AlienShip_Shortcodes {
 	}
 
 
-
 	/**
 	 * Icons
 	 *
 	 * @since 1.0
 	 * [icon] shortcode.
-	 * Example: [icon type="search"][/icon]
+	 * Example: [icon type="search"]
 	 */
 	function alienship_icon( $atts, $content = null ) {
 
-		extract( shortcode_atts( array( 'type' => 'type' ), $atts ) );
-		return '<i class="glyphicon glyphicon-' . $type . '"></i>';
+		$atts = shortcode_atts( array(
+			'type' => 'type',
+		),
+		$atts, 'alienship_icon' );
+
+		return '<i class="glyphicon glyphicon-' . $atts['type'] . '"></i>';
 	}
-
-
-
-
-	/**
-	 * White Icons
-	 *
-	 * @since 1.0
-	 * [icon-white] shortcode.
-	 * Example: [icon-white type="search"][/icon-white]
-	 */
-	function alienship_icon_white( $atts, $content = null ) {
-
-		extract( shortcode_atts( array( 'type' => 'type' ), $atts ) );
-		return '<i class="icon icon-' . $type . ' icon-white"></i>';
-	}
-
-
 
 
 	/**
@@ -250,47 +233,53 @@ class AlienShip_Shortcodes {
 	 */
 	function alienship_label( $atts, $content = null ) {
 
-		extract( shortcode_atts( array(
-				'type' => 'default'
-				),
-			$atts )
-		);
+		$atts = shortcode_atts( array(
+			'type' => 'default',
+		),
+		$atts, 'alienship_label' );
 
-		return '<span class="label label-' . $type . '">' . do_shortcode( $content ) . '</span>';
+		return '<span class="label label-' . $atts['type'] . '">' . do_shortcode( $content ) . '</span>';
 
 	}
-
-
 
 
 	/**
 	 * Login form shortcode
 	 *
 	 * @since 1.0
-	 * [loginform] shortcode. Options are redirect="http://your-url-here.com". If redirect is not set, it returns to the current page.
+	 * [loginform] shortcode. Options are:
+	 * redirect="http://your-url-here.com". If redirect is not set, it returns to the current page.
+	 * label_username
+	 * label_password
+	 * label_remember
+	 * label_log_in
 	 * Example: [loginform redirect="http://www.site.com"]
 	 */
 	function alienship_login_form( $atts, $content = null ) {
 
-		extract( shortcode_atts( array( 'redirect' => '' ), $atts ) );
-
-		if ( ! is_user_logged_in() ) {
-
-			if( $redirect ) {
-
-				$redirect_url = $redirect;
-
-			} else {
-
-				$redirect_url = get_permalink();
-			}
-
-			$form = wp_login_form( array( 'echo' => false, 'redirect' => $redirect_url ) );
-			return $form;
+		if( is_user_logged_in() ) {
+			return;
 		}
+
+		$atts = shortcode_atts( array(
+			'redirect'       => get_permalink(),
+			'label_username' => __( 'Username', 'alienship-shortcodes' ),
+			'label_password' => __( 'Password', 'alienship-shortcodes' ),
+			'label_remember' => __( 'Remember Me', 'alienship-shortcodes' ),
+			'label_log_in'   => __( 'Log In', 'alienship-shortcodes' ),
+		),
+		$atts, 'alienship_login_form' );
+
+		$form = wp_login_form( array(
+			'echo'           => false,
+			'redirect'       => $atts['redirect'],
+			'label_username' => $atts['label_username'],
+			'label_password' => $atts['label_password'],
+			'label_remember' => $atts['label_remember'],
+			'label_log_in'   => $atts['label_log_in'],
+		) );
+		return $form;
 	}
-
-
 
 
 	/**
@@ -302,40 +291,35 @@ class AlienShip_Shortcodes {
 	 */
 	function alienship_panel( $atts, $content = null ) {
 
-		extract( shortcode_atts( array(
-				'type'        => 'default',
-				'heading'     => true,
-				'title'       => '',
-				'body'        => '',
-				'footer'      => '',
-				),
-			$atts )
-		);
+		$atts = shortcode_atts( array(
+			'type'    => 'default',
+			'heading' => false,
+			'title'   => false,
+			'footer'  => false,
+		),
+		$atts, 'alienship_panel' );
 
+		$output = '<div class="panel panel-' . $atts['type'] . '">';
 
-		$output = '<div class="panel panel-' . $type . '">';
-
-		if ( 'true' == $heading ) {
+		if ( $atts['heading'] ) {
 			$output .= '<div class="panel-heading">';
 
-			if ( $title )
-				$output .= '<h3 class="panel-title">' . $title . '</h3>';
+			if ( $atts['title'] ) {
+				$output .= '<h3 class="panel-title">' . $atts['title'] . '</h3>';
+			}
 
 			$output .= '</div>';
 		}
 
+		$output .= '<div class="panel-body">' . do_shortcode( $content ) . '</div>';
 
-		$output .= '<div class="panel-body">' . $body . '</div>';
+		if ( $atts['footer'] )
+			$output .= '<div class="panel-footer">' . $atts['footer'] . '</div>';
 
-		if ( $footer )
-			$output .= '<div class="panel-footer">' . $footer . '</div>';
-
-		$output .= '</div>';
+		$output .= '</div><!-- .panel -->';
 
 		return $output;
 	}
-
-
 
 
 	/**
@@ -350,18 +334,41 @@ class AlienShip_Shortcodes {
 		return '<div class="well">' . do_shortcode( $content ) .'</div>';
 	}
 
+	/**
+	 * Columns
+	 *
+	 * @since 1.0
+	 * [col] shortcode.
+	 * Example: [col span="3"]Your text here.[/col]
+	 */
+	function alienship_column( $atts, $content = null ) {
+
+		$atts = shortcode_atts( array(
+			'span' => '12',
+		),
+		$atts, 'alienship_column' );
+
+		return '<div class="col-sm-' . $atts['span'] . '">' . do_shortcode( $content ) .'</div>';
+	}
+
+	/**
+	 * Rows
+	 *
+	 * @since 1.0
+	 * [row] shortcode.
+	 * Example: [row class="someclass"]Your text here.[/row]
+	 */
+	function alienship_row( $atts, $content = null ) {
+
+		$atts = shortcode_atts( array(
+			'class' => '',
+		),
+		$atts, 'alienship_row' );
+
+		return '<div class="row ' . $atts['class'] . '">' . do_shortcode( $content ) .'</div>';
+	}
 
 } //class
 
 $alienship_shortcodes = new AlienShip_Shortcodes();
 endif;
-
-
-
-/* Load the update checker */
-require 'extensions/update-checker.php';
-$AlienShipShortcodesUpdateChecker = new PluginUpdateChecker(
-	'http://www.johnparris.com/deliver/wordpress/plugins/alienship-shortcodes/latest-version.json',
-	__FILE__,
-	'alienship-shortcodes'
-);
