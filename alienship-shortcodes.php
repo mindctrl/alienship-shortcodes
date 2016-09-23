@@ -16,9 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die ( "What'chu talkin' 'bout, Willis?" );
 }
 
-
-if ( ! class_exists( 'AlienShip_Shortcodes' ) ):
-
 class AlienShip_Shortcodes {
 
 	function __construct() {
@@ -370,5 +367,7 @@ class AlienShip_Shortcodes {
 
 } //class
 
-$alienship_shortcodes = new AlienShip_Shortcodes();
-endif;
+function alienship_load_shortcodes() {
+	$alienship_shortcodes = new AlienShip_Shortcodes();
+}
+add_action( 'plugins_loaded', 'alienship_load_shortcodes' );
